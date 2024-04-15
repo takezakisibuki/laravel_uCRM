@@ -64,3 +64,10 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 環境の立ち上げ方メモ  
+/Applications/MAMP/htdocs/laravel/uCRM  
+上記のディレクトリ中で別々のウィンドウで  
+php artisan serve  
+npm run dev  
+を実行する。
