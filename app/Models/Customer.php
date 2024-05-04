@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Purchase;
@@ -15,6 +17,7 @@ class Customer extends Model
     ];
 
     public function scopeSearchCustomers($query, $input = null) {
+        // Log::debug($input->search);
         if(!empty($input)){
         if(Customer::where('kana', 'like', $input . '%' ) ->orWhere('tel', 'like', $input . '%')->exists())
         {
