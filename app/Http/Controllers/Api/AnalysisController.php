@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\services\AnalysisServices;
 use App\services\decileService;
+use App\services\rfmService;
+
 
 class AnalysisController extends Controller
 {
@@ -32,7 +34,19 @@ class AnalysisController extends Controller
         }
         if($request->type === 'decile'){
             list($data,$labels,$totals)=decileService::decile($subQuery);
-            Log::error($request->type);
+            // Log::error($request->type);
+        }
+        if($request->type === 'rfm'){
+            // Log::error($request);
+            list($data,$eachCount,$totals)=RFMService::rfm($subQuery,$request->rfmPrms);
+            // Log::error($data);
+            return response()->json([
+                'data'=>$data,
+                'type'=>$request->type,
+                'eachCount'=>$eachCount,
+                'totals'=>$totals,
+            ],Response::HTTP_OK);
+
         }
 
 

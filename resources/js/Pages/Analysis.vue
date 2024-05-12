@@ -14,21 +14,24 @@ onMounted(()=>{
 const form = reactive({
     startDate: null,
     endDate: null,
-    type:"perDay"
+    type:"perDay",
+    rfmPrms: [14, 28, 60, 90, 7, 5, 3, 2, 300000, 200000, 100000,30000 ],
 });
 
 const data = reactive({
     // data: []
+
 })
 
 const getData = async () => { 
     try{
         await axios.get('/api/analysis/', { params: {
-            startDate: form.startDate, endDate: form.endDate, type: form.type
+            startDate: form.startDate, endDate: form.endDate, type: form.type, rfmPrms: form.rfmPrms
         } })
     .then( res => {
         data.data = res.data.data
-        data.labels = res.data.labels
+        if(res.data.labels){data.labels = res.data.labels;}
+        if(res.data.eachCount){data.eachCount = res.data.eachCount;}
         data.totals = res.data.totals
         // console.log(res.data)
         data.type = res.data.type
@@ -63,9 +66,47 @@ const getData = async () => {
                             <input type="radio" name="type" value="perMonth" v-model="form.type" class="mr-4">月毎
                             <input type="radio" name="type" value="perYear" v-model="form.type" class="mr-4">年毎
                             <input type="radio" name="type" value="decile" v-model="form.type" class="mr-4">デシル分析
+                            <input type="radio" name="type" value="rfm" v-model="form.type" class="mr-4">RFM分析
+                            <div v-if="form.type === 'rfm'" class="my-8">
+                                <table class="mx-auto">
+                                    <thead>
+                                        <tr>
+                                        <th>ランク</th> <th>R (○日以内)</th> <th>F (○回以上)</th> <th>M (○円以上)</th>
+                                        </tr> 
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>5</td>
+                                            <td><input type="number" v-model="form.rfmPrms[0]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[4]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[8]"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td><input type="number" v-model="form.rfmPrms[1]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[5]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[9]"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td><input type="number" v-model="form.rfmPrms[2]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[6]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[10]"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td><input type="number" v-model="form.rfmPrms[3]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[7]"></td>
+                                            <td><input type="number" v-model="form.rfmPrms[11]"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <button class="flex mx-auto mt-4 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Search</button>
                         </form>
-                        <Chart :data="data"/>
+                        <div v-if="form.type != 'rfm'">
+                            <Chart :data="data"/>
+                        </div>
                         <ResultTable :data="data"/>
                     </div>
                 </div>
